@@ -19,7 +19,7 @@ class NewComplaint extends StatefulWidget {
 }
 
 class _NewComplaintState extends State<NewComplaint> {
-  final _client = http.Client();
+  var selectedValue = '';
 
   @override
   void sendEmail() async {
@@ -31,18 +31,17 @@ class _NewComplaintState extends State<NewComplaint> {
       token = preferences.getString("token") ?? '';
     });
     final messUrl = Uri.parse("$baseUrl/tickets/create-ticket");
-    http.Response response = await _client.post(
-      messUrl,
-      headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-        'authorization': token
-      },
-      body: jsonEncode({
-        'title' : subjectController.text,
-        'description' : messageController.text
-      })
-    );
+    http.Response response = await http.post(messUrl,
+        headers: {
+          'Content-type': 'application/json',
+          'Accept': 'application/json',
+          'authorization': token
+        },
+        body: jsonEncode({
+          'title': subjectController.text,
+          'description': messageController.text,
+          'category' : selectedValue
+        }));
     print(response.statusCode);
     var json = jsonDecode(response.body);
     print(json);
@@ -51,9 +50,10 @@ class _NewComplaintState extends State<NewComplaint> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('New Complaint'),
-      // ),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -98,7 +98,8 @@ class _NewComplaintState extends State<NewComplaint> {
                 child: Column(
                   children: [
                     TextFormField(
-                      style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground),
                       controller: subjectController,
                       decoration: InputDecoration(
                         icon: const Icon(Icons.subject_rounded),
@@ -110,7 +111,8 @@ class _NewComplaintState extends State<NewComplaint> {
                       height: 25,
                     ),
                     TextFormField(
-                      style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground),
                       controller: messageController,
                       decoration: InputDecoration(
                         icon: const Icon(Icons.message),
@@ -118,6 +120,51 @@ class _NewComplaintState extends State<NewComplaint> {
                         labelText: 'Complaint',
                       ),
                     ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    DropdownButtonFormField(
+                        hint: Text(
+                          "Category",
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.onBackground),
+                        ),
+                        items: [
+                          DropdownMenuItem(
+                              child: Text(
+                                'Electric',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground),
+                              ),
+                              value: 'Electric'),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Carpenter',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                            ),
+                            value: 'Carpenter',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Other',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground),
+                            ),
+                            value: 'Other',
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (value == null) return;
+                          selectedValue = value;
+                        }),
                     SizedBox(
                       height: 25,
                     ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dorm_link/src/Common_widgets/custombigbutton.dart';
 import 'package:dorm_link/src/features/utilities/sport_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,21 +9,22 @@ import 'package:dorm_link/src/features/auth/register.dart';
 import 'package:http/http.dart' as http;
 
 class NowPlayingCard extends StatefulWidget {
-  const NowPlayingCard(
-      {super.key,
-      required this.sportName,
-      required this.token,
-      required this.numOfPlayers});
+  const NowPlayingCard({
+    super.key,
+    required this.sportName,
+    required this.token,
+  });
 
   final String sportName;
   final String token;
-  final int numOfPlayers;
 
   @override
   State<NowPlayingCard> createState() => _NowPlayingCardState();
 }
 
 class _NowPlayingCardState extends State<NowPlayingCard> {
+  int numOfPlayers = 0;
+
   @override
   void initState() {
     _fetchTotalPlayers();
@@ -30,8 +32,7 @@ class _NowPlayingCardState extends State<NowPlayingCard> {
   }
 
   void _fetchTotalPlayers() async {
-    final sportsUrl =
-        Uri.parse("$baseUrl/sports/playing/${widget.sportName.toLowerCase()}");
+    final sportsUrl = Uri.parse("$baseUrl/sports/playing/${widget.sportName}");
     http.Response response = await http.get(
       sportsUrl,
       headers: {
@@ -41,7 +42,22 @@ class _NowPlayingCardState extends State<NowPlayingCard> {
       },
     );
     var json = jsonDecode(response.body);
-    print(json);
+    setState(() {
+      numOfPlayers = json.length;
+    });
+  }
+
+  void playSport(String sportsName) async {
+    final sportsUrl = Uri.parse("$baseUrl/sports/addPlayer/$sportsName}");
+    http.Response response = await http.post(
+      sportsUrl,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'authorization': widget.token
+      },
+    );
+    print(response.statusCode.toString());
   }
 
   @override
@@ -53,7 +69,7 @@ class _NowPlayingCardState extends State<NowPlayingCard> {
             builder: (ctx) => SportsScreen(
                 sportName: widget.sportName,
                 token: widget.token,
-                numOfPlayers: widget.numOfPlayers)));
+                numOfPlayers: numOfPlayers)));
       },
       child: Container(
         padding: EdgeInsets.all(16),
@@ -87,7 +103,7 @@ class _NowPlayingCardState extends State<NowPlayingCard> {
               RichText(
                   text: TextSpan(children: [
                 TextSpan(
-                    text: "${widget.numOfPlayers}",
+                    text: "${numOfPlayers}",
                     style: GoogleFonts.inter(
                         fontSize: 16,
                         color: Theme.of(context).colorScheme.primary)),
@@ -96,7 +112,32 @@ class _NowPlayingCardState extends State<NowPlayingCard> {
                     style: GoogleFonts.inter(
                         fontSize: 16,
                         color: Theme.of(context).colorScheme.onBackground))
-              ]))
+              ])),
+              // const SizedBox(
+              //   height: 12,
+              // ),
+              // Container(
+              //   width: double.infinity,
+              //   padding: EdgeInsets.all(8),
+              //   decoration: BoxDecoration(
+              //       boxShadow: [
+              //         BoxShadow(
+              //           color: Color.fromARGB(14, 18, 18, 18),
+              //           spreadRadius: 2,
+              //           blurRadius: 10,
+              //           offset: Offset(0, 0), // changes position of shadow
+              //         ),
+              //       ],
+              //       color: Theme.of(context).colorScheme.primary,
+              //       borderRadius: BorderRadius.circular(12)),
+              //   child: Center(
+              //     child: Text("Start Playing",
+              //         style: GoogleFonts.inter(
+              //             fontSize: 14,
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.w500)),
+              //   ),
+              // ),
             ],
           ),
         ]),

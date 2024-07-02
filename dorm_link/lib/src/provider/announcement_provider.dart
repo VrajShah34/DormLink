@@ -20,7 +20,7 @@ class AnnouncementsNotifier extends StateNotifier<List<dynamic>> {
         'authorization': token
       },
     );
-    print(response.body);
+    //print(response.body);
     final announcementsList = [];
     var json = jsonDecode(response.body);
     for (int i = 0; i < json.length; ++i) {
@@ -28,6 +28,7 @@ class AnnouncementsNotifier extends StateNotifier<List<dynamic>> {
       announcementsList.add([json[i]["title"], json[i]["createdBy"], json[i]["updatedAt"]]);
     }
     state = announcementsList;
+
   }
 }
 

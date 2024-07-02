@@ -20,10 +20,10 @@ const sportSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    startTime:{
-      type:Date,
-      required:true
-    }
+    startTime: {
+      type: Date,
+      required: true
+    },
   }]
 });
 

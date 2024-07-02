@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:dorm_link/main.dart';
 import 'package:dorm_link/src/Common_widgets/custombigbutton.dart';
+import 'package:dorm_link/src/admin/home_screen.dart';
 import 'package:dorm_link/src/features/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,11 +59,24 @@ class _LoginPageState extends State<LoginPage> {
       var myName = json["name"];
       var myHostel = json["hostel"];
       var myEnrollmentNo = json["enrollmentNo"];
+      var roomNo = json["roomNo"];
+      var isAdmin = json["isAdmin"];
       print(json);
       preferences.setString("name", myName);
       preferences.setString("token", myToken);
       preferences.setString("hostel", myHostel);
       preferences.setString("enrollmentNo", myEnrollmentNo);
+      preferences.setString('roomNo', roomNo);
+      preferences.setBool('isAdmin', isAdmin);
+
+      if(isAdmin){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (ctx) =>
+                AdminHomeScreen(
+                  token: myToken,
+                )));
+        return;
+      }
 
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Welcome $myName !", style: TextStyle(color: Colors.white),)));

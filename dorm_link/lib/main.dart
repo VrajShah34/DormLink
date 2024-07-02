@@ -1,3 +1,4 @@
+import 'package:dorm_link/src/admin/home_screen.dart';
 import 'package:dorm_link/src/features/auth/login.dart';
 import 'package:dorm_link/src/features/utilities/utilities.dart';
 import 'package:flutter/material.dart';
@@ -12,18 +13,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences preferences = await SharedPreferences.getInstance();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
   runApp(ProviderScope(
     child: MyApp(
-      token: preferences.getString("token"),
-    ),
+        token: preferences.getString("token"),
+        isAdmin: preferences.getBool("isAdmin")),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.token});
+  const MyApp({super.key, required this.token, this.isAdmin});
 
   final token;
+  final bool? isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,11 @@ class MyApp extends StatelessWidget {
         home: token != null
             ? (JwtDecoder.isExpired(token)
                 ? LoginPage()
-                : MyHomePage(
-                    token: token,
-                  ))
+                : isAdmin!
+                    ? AdminHomeScreen(token: token)
+                    : MyHomePage(
+                        token: token,
+                      ))
             : LoginPage());
   }
 }
@@ -59,9 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: const Color.fromARGB(255, 241, 250, 255),
       body: Center(
           child: [
-        HomeScreen(token: widget.token,),
-        UtilitiesScreen(token: widget.token,),
-        const Complaints(),
+        HomeScreen(
+          token: widget.token,
+        ),
+        UtilitiesScreen(
+          token: widget.token,
+        ),
+        Complaints(token: widget.token),
         const ProfilePage(),
       ][selectedIndex]),
       bottomNavigationBar: Container(
