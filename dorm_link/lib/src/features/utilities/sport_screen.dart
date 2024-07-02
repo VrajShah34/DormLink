@@ -23,9 +23,17 @@ class SportsScreen extends StatefulWidget {
 }
 
 class _SportsScreenState extends State<SportsScreen> {
+  var studentName = "";
+  var enrollmentNo = "";
+
+  @override
+  void initState() {
+    _fetchPersonDetails();
+    super.initState();
+  }
   void _fetchPersonDetails() async {
     final sportsUrl =
-        Uri.parse("$baseUrl/sports/playing/${widget.sportName.toLowerCase()}");
+        Uri.parse("$baseUrl/sports/playing/${widget.sportName}");
     http.Response response = await http.get(
       sportsUrl,
       headers: {
@@ -34,8 +42,13 @@ class _SportsScreenState extends State<SportsScreen> {
         'authorization': widget.token
       },
     );
+    print(response.body);
     var json = jsonDecode(response.body);
-    print(json);
+    setState(() {
+
+    studentName = json["name"];
+    enrollmentNo = json["enrollmentNo"];
+    });
   }
 
   @override
@@ -60,7 +73,7 @@ class _SportsScreenState extends State<SportsScreen> {
                 tileColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 leading: Initicon(
-                  text: "Name",
+                  text: studentName,
                   backgroundColor:
                       Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
                           .withOpacity(1.0),
@@ -74,7 +87,7 @@ class _SportsScreenState extends State<SportsScreen> {
                       color: Theme.of(context).colorScheme.onBackground),
                 ),
                 subtitle: Text(
-                  "Started playing 45 mins ago",
+                  enrollmentNo,
                   style: GoogleFonts.inter(
                       fontSize: 14,
                       color: Theme.of(context).colorScheme.onBackground),

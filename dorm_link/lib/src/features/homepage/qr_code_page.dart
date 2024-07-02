@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math';
 
 class QRCodePage extends StatefulWidget {
   const QRCodePage({super.key});
@@ -40,7 +41,7 @@ class _QRCodePageState extends State<QRCodePage> {
         child: Column(
           children: [
             QrImageView(
-              data: "Fuck you",
+              data: "$enrollmentNo $hostel ${Random().nextInt(100000000000)+100000}",
               size: MediaQuery.of(context).size.width,
             ),
             Text(

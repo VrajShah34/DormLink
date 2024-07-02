@@ -20,6 +20,7 @@ exports.addPlayerToSport = async (req, res) => {
     try {
       const sportname=req.params.sportname;
       const { enrollmentNo, name} = req.body;
+      const startTime = new Date();
   
       // Check if the player is already playing a sport
       const existingSport = await Sport.findOne({ 'players.enrollmentNo': enrollmentNo });
@@ -34,7 +35,7 @@ exports.addPlayerToSport = async (req, res) => {
       if (sport.players.length >= sport.numberOfPlayers) {
         return res.status(400).send('No available slots for this sport');
       }
-      sport.players.push({ enrollmentNo, name });
+      sport.players.push({ enrollmentNo, name , startTime});
       await sport.save();
       res.status(201).json(sport);
     } catch (error) {

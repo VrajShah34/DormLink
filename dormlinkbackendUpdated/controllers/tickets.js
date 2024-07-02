@@ -61,11 +61,9 @@ exports.getOpenTicketController=async (req,res)=>{
         try {
             const orderA= await ticketModel.find({status:0}).limit(15);
             
-            res.status(200).send({
-                success:true,  
-                message:"All Open Tickets",
+            res.status(200).json(
                 orderA
-            });
+            );
         } catch (error) {
             console.log(error);
             res.send(500).send({
@@ -78,11 +76,9 @@ exports.getOpenTicketController=async (req,res)=>{
         try {
             const orderA= await ticketModel.find({status:0 ,enrollmentNo}).limit(15);
             
-            res.status(200).send({
-                success:true,  
-                message:"All Open Tickets",
+            res.status(200).json(
                 orderA
-            });
+            );
         } catch (error) {
             console.log(error);
             res.send(500).send({
@@ -102,11 +98,9 @@ exports.getClosedTicketController=async (req,res)=>{
         try {
             const orderA= await ticketModel.find({status:1}).limit(15);
             
-            res.status(200).send({
-                success:true,  
-                message:"All Closed Tickets",
+            res.status(200).json(
                 orderA
-            });
+            );
         } catch (error) {
             console.log(error);
             res.send(500).send({
@@ -119,11 +113,9 @@ exports.getClosedTicketController=async (req,res)=>{
         try {
             const orderA= await ticketModel.find({status:1 ,enrollmentNo}).limit(15);
             
-            res.status(200).send({
-                success:true,  
-                message:"All Closed Tickets",
+            res.status(200).json(
                 orderA
-            });
+            );
         } catch (error) {
             console.log(error);
             res.send(500).send({

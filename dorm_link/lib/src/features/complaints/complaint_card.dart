@@ -11,7 +11,7 @@ class ComplaintCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
       child: Container(
         decoration: const BoxDecoration(
             color: Colors.white,
@@ -44,7 +44,7 @@ class ComplaintCard extends StatelessWidget {
                     child: Text(
                       heading,
                       style: GoogleFonts.inter(
-                          fontSize: 18, fontWeight: FontWeight.w500),
+                          fontSize: 18, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onBackground),
                     ),
                   ),
                   Padding(
@@ -53,7 +53,7 @@ class ComplaintCard extends StatelessWidget {
                       description,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
-                          fontSize: 14, fontWeight: FontWeight.w400),
+                          fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.onBackground),
                     ),
                   )
                 ],

@@ -19,7 +19,11 @@ const sportSchema = new mongoose.Schema({
     name: {
       type: String,
       required: true
-    }
+    },
+    startTime: {
+      type: Date,
+      required: true
+    },
   }]
 });
 
